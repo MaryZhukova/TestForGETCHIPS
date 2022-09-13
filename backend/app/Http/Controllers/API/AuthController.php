@@ -30,13 +30,12 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $request->user()->createToken('Token Personal')->accessToken;
-
-        return response()->success([
-            'access_token'  => $token->accessToken,
-            'token_type'    => 'Bearer',
-            'expires_at'    => Carbon::parse($token->token->expires_at)->toDateTimeString()
-        ]);
+        $user = User::where('email', $request->email)->first();
+        return \response()->json([
+            'status' => true,
+            'massage' => 'Logget',
+            'token' => $user->createToken("API_TOKEN")->plainTextToken
+        ], 200);
 
 
     }
