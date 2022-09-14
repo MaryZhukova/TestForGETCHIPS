@@ -1,0 +1,212 @@
+{
+  "info": {
+    "_postman_id": "39779519-6613-44db-8ebf-a51666052cc1",
+    "name": "Advertising Network",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "2993264"
+  },
+  "item": [
+    {
+      "name": "AuthUser",
+      "item": [
+        {
+          "name": "Auth",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "7|wPNGVP7gBKklOXrsJHmDU6m9ZfcBtP08eRnwku1I",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "email",
+                "value": "user_1@example.com",
+                "type": "text"
+              },
+              {
+                "key": "pasword",
+                "value": "password_1",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "user_1@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password_1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://testing.stillbeta.app/api/login/",
+              "protocol": "https",
+              "host": [
+                "testing",
+                "stillbeta",
+                "app"
+              ],
+              "path": [
+                "api",
+                "login",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Adverts",
+      "item": [
+        {
+          "name": "Add Advert",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "7|wPNGVP7gBKklOXrsJHmDU6m9ZfcBtP08eRnwku1I",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "title",
+                "value": "Test",
+                "type": "text"
+              },
+              {
+                "key": "description",
+                "value": "Teste",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "123werwerew",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "123werre",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://testing.stillbeta.app/api/adverts/",
+              "protocol": "https",
+              "host": [
+                "testing",
+                "stillbeta",
+                "app"
+              ],
+              "path": [
+                "api",
+                "adverts",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "title",
+                  "value": "wer",
+                  "disabled": true
+                },
+                {
+                  "key": "description",
+                  "value": "wer",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Adverts",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "https://testing.stillbeta.app/api/adverts/",
+              "protocol": "https",
+              "host": [
+                "testing",
+                "stillbeta",
+                "app"
+              ],
+              "path": [
+                "api",
+                "adverts",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View Advert",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "7|wPNGVP7gBKklOXrsJHmDU6m9ZfcBtP08eRnwku1I",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://testing.stillbeta.app/api/adverts/1",
+              "protocol": "https",
+              "host": [
+                "testing",
+                "stillbeta",
+                "app"
+              ],
+              "path": [
+                "api",
+                "adverts",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
