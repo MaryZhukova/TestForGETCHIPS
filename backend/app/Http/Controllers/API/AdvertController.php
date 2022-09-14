@@ -18,9 +18,19 @@ class AdvertController extends Controller
      * Display a listing of the resource.
      *
      */
-    public function index()
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
     {
-      $list = Advert::all();
+
+        $pages = 2;
+       // $list = Advert::orderBy((string)$request->field, (string)$request->sortBy)->get();
+
+        $list = Advert::orderByRaw("title DESC, public_date ASC")
+        ->get();
 
         return response()->json([
             "status" => true,
