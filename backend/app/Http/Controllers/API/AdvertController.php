@@ -25,16 +25,20 @@ class AdvertController extends Controller
      */
     public function index(Request $request)
     {
+        $pageRecs = 5;
+        if($request->page){
+            $pageRecs = $request->page;
+        }
 
-        $pages = 2;
-       // $list = Advert::orderBy((string)$request->field, (string)$request->sortBy)->get();
 
-        $list = Advert::orderByRaw("title DESC, public_date ASC")
-        ->get();
+        $sort = $request->input('sort');
+        $order = $request->input('order');
+        $list = Advert::orderBy($order, $sort)->get();
+
 
         return response()->json([
             "status" => true,
-            "data"  => $list
+            "data" => $list
         ]);
     }
 
@@ -61,11 +65,11 @@ class AdvertController extends Controller
             'publication_date' => 'required',
         ]);
         // Дописать обработку только трех фото
-        if($validate->fails()){
+        if ($validate->fails()) {
             return response()->json([
-                "status"    => 404,
-                "success"   => false,
-                "message"   => $validate->errors()
+                "status" => 404,
+                "success" => false,
+                "message" => $validate->errors()
             ]);
         }
 
@@ -79,9 +83,9 @@ class AdvertController extends Controller
         $advert->save();
 
         return response()->json([
-            "status"    => 200,
-            "success"   => true,
-            "message"   => "Объявление добавлено"
+            "status" => 200,
+            "success" => true,
+            "message" => "Объявление добавлено"
         ]);
     }
 
@@ -89,7 +93,7 @@ class AdvertController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -99,7 +103,7 @@ class AdvertController extends Controller
         $advert = Advert::where('ID', $id)->get();
         if ($advert && $advert->user_id == auth('sanctum')->user()->id) {
 
-           // дописать вывод фото
+            // дописать вывод фото
             return response()->json([
                 "status" => 200,
                 "success" => true,
@@ -108,10 +112,11 @@ class AdvertController extends Controller
             ]);
         }
     }
+
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -122,8 +127,8 @@ class AdvertController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -134,7 +139,7 @@ class AdvertController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
