@@ -34,7 +34,8 @@ class AuthController extends Controller
         return \response()->json([
             'status' => true,
             'massage' => 'Logget',
-            'token' => $user->createToken("API_TOKEN")->plainTextToken
+            'token' => $user->createToken("API_TOKEN")->plainTextToken,
+            'token_type' => 'Bearer'
         ], 200);
 
 

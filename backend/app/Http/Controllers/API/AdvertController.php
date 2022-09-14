@@ -25,20 +25,24 @@ class AdvertController extends Controller
      */
     public function index(Request $request)
     {
-        $pageRecs = 5;
-        if($request->page){
-            $pageRecs = $request->page;
-        }
-
-
         $sort = $request->input('sort');
         $order = $request->input('order');
-        $list = Advert::orderBy($order, $sort)->get();
 
+        // TODO 5 вынест в настройки
+        $ordered = Advert::orderBy($order, $sort)->get();
+        $list = Advert::orderBy($order, $sort)->paginate(5);
 
         return response()->json([
             "status" => true,
-            "data" => $list
+            "data" =>[
+                "records" => $ordered,
+                'pagination' => [
+                'total_items' => $list->total(),
+                'count_pages' => $list->count(),
+                'per_page' => $list->perPage(),
+                'current_page' => $list->currentPage(),
+                ]
+            ]
         ]);
     }
 
@@ -98,7 +102,6 @@ class AdvertController extends Controller
      */
     public function show($id)
     {
-        dd($id);
 
         $advert = Advert::where('ID', $id)->get();
         if ($advert && $advert->user_id == auth('sanctum')->user()->id) {
