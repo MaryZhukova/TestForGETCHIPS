@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\Api\V1\NewAdvertRequest;
+use App\Http\Requests\Api\NewAdvertRequest;
+use App\Http\Requests\UpdateAdvertRequest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Advert;
@@ -28,14 +29,12 @@ class AdvertController extends Controller
         $sort = $request->input('sort');
         $order = $request->input('order');
 
-        // TODO 5 вынест в настройки
-        $ordered = Advert::orderBy($order, $sort)->get();
         $list = Advert::orderBy($order, $sort)->paginate(5);
 
         return response()->json([
             "status" => true,
             "data" =>[
-                "records" => $ordered,
+                "records" => $list,
                 'pagination' => [
                 'total_items' => $list->total(),
                 'count_pages' => $list->count(),
@@ -102,41 +101,50 @@ class AdvertController extends Controller
      */
     public function show($id)
     {
-
-        $advert = Advert::where('ID', $id)->get();
-        if ($advert && $advert->user_id == auth('sanctum')->user()->id) {
-
-            // дописать вывод фото
-            return response()->json([
-                "status" => 200,
-                "success" => true,
-                "message" => "Ваше объявление",
-                "data" => $advert
-            ]);
+        $advert = Advert::find($id);
+        if ($advert) {
+            if($advert->user->id === auth('sanctum')->user()->id){
+                // дописать вывод фото
+                return response()->json([
+                    "status" => 200,
+                    "success" => true,
+                    "message" => "Ваше объявление",
+                    "data" => $advert
+                ]);
+            }else{
+                return response()->json([
+                    "status" => 200,
+                    "success" => false,
+                    "message" => "Не ваше объявление",
+                    "data" => []
+                ]);
+            }
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param UpdateAdvertRequest $request
+     * @param App\Models\Advert $advert
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAdvertRequest $request,  $id)
     {
-        //
+
+        $advert = Advert::find($id);
+        if ($advert) {
+            if ($advert->user->id === auth('sanctum')->user()->id) {
+                $advert->update($request->validated());
+            }
+        }
+
+        return response()->json([
+            "status" => 200,
+            "success" => false,
+            "message" => "Обновлено",
+            "data" => $advert
+        ]);
     }
 
     /**
