@@ -26,7 +26,7 @@ class AdvertController extends Controller
      */
     public function index(Request $request)
     {
-        $list = Advert::orderBy($request->input('order'), $request->input('sort'))->paginate(5);
+        $list = Advert::with('filestorages')->orderBy($request->input('order'), $request->input('sort'))->paginate(5);
 
         return response()->json([
                 "success" => true,

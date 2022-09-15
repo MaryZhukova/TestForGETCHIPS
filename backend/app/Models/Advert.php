@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Bitrix\Main\Composite\Data\FileStorage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Filestorage;
 
 class Advert extends Model
 {
@@ -33,9 +33,9 @@ class Advert extends Model
     }
 
 
-    public function files()
+    public function filestorages()
     {
-        return $this->hasMany(FileStorage::class);
+        return $this->hasMany(Filestorage::class);
     }
 
 }
