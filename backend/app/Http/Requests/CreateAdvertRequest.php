@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Http\Requests\API;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Request;
+
 
 class CreateAdvertRequest extends FormRequest
 {
+    protected $stopOnFirstFailure = false;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,10 +17,10 @@ class CreateAdvertRequest extends FormRequest
      */
     public function authorize()
     {
-        /*$user = $this->user();
+       // $user = $this->user();
 
-        return $user != null && $user->token()
-        return true;*/
+        //if ($user != null && auth('sanctum')->user())
+            return true;
     }
 
     /**
@@ -27,11 +31,13 @@ class CreateAdvertRequest extends FormRequest
     public function rules()
     {
         return [
+            'files' => 'required|array|min:1|max:3',
+            'files.*' => 'mimes:jpeg,jpg,png',
             'title'         => 'required|max:255',
-            'description'   => 'required|max:1023',
-            'create_date'   => 'required|date',
-            'user_id'       => 'required'
-
+            'description'   => 'required|max:1023'
+            //'public_date'   => 'required|date',
         ];
     }
+
+    
 }

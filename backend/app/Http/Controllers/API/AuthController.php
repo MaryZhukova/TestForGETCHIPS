@@ -23,7 +23,7 @@ class AuthController extends Controller
 
         if (!Auth::attempt($credentials)) {
 
-            return new Response([
+            return \response()->json([
                 'success' => false,
                 'status' => 401,
                 'message' => __('auth.failed')
@@ -31,29 +31,13 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
+
         return \response()->json([
             'status' => true,
-            'massage' => 'Logget',
+            'massage' => __('auth.login'),
             'token' => $user->createToken("API_TOKEN")->plainTextToken,
             'token_type' => 'Bearer'
         ], 200);
-
-
-    }
-
-
-    public function create(){
-        $userFirst = new User();
-        $userFirst->email = "user_1@example.com";
-        $userFirst->name = "user_1@example.com";
-        $userFirst->password = bcrypt("password_1");
-        $userFirst->save();
-
-        $userFirst = new User();
-        $userFirst->email = "user_2@example.com";
-        $userFirst->name = "user_2@example.com";
-        $userFirst->password = bcrypt("password_2");
-        $userFirst->save();
-        return "ok";
+        
     }
 }
