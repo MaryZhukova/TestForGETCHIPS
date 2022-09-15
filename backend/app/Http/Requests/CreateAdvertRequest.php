@@ -17,10 +17,10 @@ class CreateAdvertRequest extends FormRequest
      */
     public function authorize()
     {
-       // $user = $this->user();
+        $user = $this->user();
+        
 
-        //if ($user != null && auth('sanctum')->user())
-            return true;
+        return $user != null && $user->tokenCan('create');
     }
 
     /**

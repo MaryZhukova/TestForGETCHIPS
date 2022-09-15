@@ -26,20 +26,30 @@ class AdvertController extends Controller
      */
     public function index(Request $request)
     {
-        $list = Advert::with('filestorages')->orderBy($request->input('order'), $request->input('sort'))->paginate(5);
+        $order = "title";
+        $sort = "asc";
+
+        $orderVariants = [
+            'title',
+            'public_date'
+        ];
+        $sortVariants = [
+            'asc',
+            'desc'
+        ];
+        if($request->input('order') && in_array($request->input('order'), $orderVariants)
+            && $request->input('sort') && in_array($request->input('sort'), $sortVariants)
+        ){
+            $order = $request->input('order');
+            $sort = $request->input('sort');
+        }
+
+        $list = Advert::with('filestorages')->orderBy($order, $sort)->paginate(10);
 
         return response()->json([
                 "success" => true,
                 "status" => 200,
                 "data" => $list
-                /*[
-                "records" => $list,
-                'pagination' => [
-                'total_items' => $list->total(),
-                'count_pages' => $list->count(),
-                'per_page' => $list->perPage(),
-                'current_page' => $list->currentPage(),
-                ]*/
             ]
         );
     }
@@ -47,7 +57,7 @@ class AdvertController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param CreateAdvertRequest $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(CreateAdvertRequest $request)
     {
@@ -58,7 +68,6 @@ class AdvertController extends Controller
                 $arPhoto[] = $path;
             }
         }
-
 
         $advert = new Advert();
         $advert->title = $request->title;
@@ -79,7 +88,8 @@ class AdvertController extends Controller
         return response()->json([
             "status" => 200,
             "success" => true,
-            "message" => __('advert.success')
+            "message" => __('advert.success'),
+            "data" => $advert
         ]);
 
 
@@ -87,44 +97,47 @@ class AdvertController extends Controller
 
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * Display the advert.
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
-        $advert = Advert::find($id);
+        $advert = Advert::with("filestorages")->find($id);
         if ($advert) {
             if ($advert->user->id === auth('sanctum')->user()->id) {
-                // дописать вывод фото
                 return response()->json([
                     "status" => 200,
                     "success" => true,
-                    "message" => "Ваше объявление",
+                    "message" =>  __('advert.owner'),
                     "data" => $advert
                 ]);
             } else {
                 return response()->json([
-                    "status" => 200,
+                    "status" => 400,
                     "success" => false,
-                    "message" => "Не ваше объявление",
-                    "data" => []
+                    "message" =>  __('advert.not_owner'),
+
                 ]);
             }
         }
+        return response()->json([
+            "status" => 404,
+            "success" => false,
+            "message" => __('advert.not_found'),
+
+        ]);
     }
 
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified advert in storage.
      * @param UpdateAdvertRequest $request
      * @param App\Models\Advert $advert
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateAdvertRequest $request, $id)
     {
-
         $advert = Advert::find($id);
         if ($advert) {
             if ($advert->user->id === auth('sanctum')->user()->id) {
@@ -135,7 +148,7 @@ class AdvertController extends Controller
         return response()->json([
             "status" => 200,
             "success" => false,
-            "message" => "Обновлено",
+            "message" => __('advert.update'),
             "data" => $advert
         ]);
     }
@@ -148,24 +161,24 @@ class AdvertController extends Controller
      */
     public function delete($id)
     {
-        $advert = Advert::findOrFail($id);
-        if ($advert)
-            $advert->delete();
-        else
+        $advert = Advert::find($id);
+        if ($advert){
+            if ($advert->user->id === auth('sanctum')->user()->id) {
+                $advert->delete();
+                return response()->json([
+                    "status" => 200,
+                    "success" => false,
+                    "message" =>  __('advert.success'),
+                    "data" => []
+                ]);
+            }
+
             return response()->json([
                 "status" => 200,
                 "success" => false,
-                "message" => "Erorr",
+                "message" => __('advert.del_error'),
                 "data" => []
             ]);
-
-        return response()->json([
-            "status" => 200,
-            "success" => false,
-            "message" => "Success delete",
-            "data" => []
-        ]);
+        }
     }
-
-
 }

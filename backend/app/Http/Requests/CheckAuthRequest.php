@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\API;
-use App\Models\Advert;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAdvertRequest extends FormRequest
+class CheckAuthRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,20 +13,19 @@ class UpdateAdvertRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->route('advert')
-            ->canBeEditedBy($this->user());
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function rules()
     {
         return [
-            'title'         => 'required|max:255',
-            'description'   => 'required|max:1023',
+            'email'         => 'required|string|email',
+            'password'      => 'required|string|min:6'
         ];
     }
 }
