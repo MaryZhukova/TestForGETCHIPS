@@ -4,7 +4,7 @@ namespace App\Http\Requests\API;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class NewAdvertRequest extends FormRequest
+class CreateAdvertRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,10 @@ class NewAdvertRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        /*$user = $this->user();
+
+        return $user != null && $user->token()
+        return true;*/
     }
 
     /**

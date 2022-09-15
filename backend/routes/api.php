@@ -23,10 +23,12 @@ Route::get('/users', '\App\Http\Controllers\API\UserController@list');
 
 
 Route::get('/adverts', '\App\Http\Controllers\API\AdvertController@index');
-Route::post('/adverts', '\App\Http\Controllers\API\AdvertController@store');
 
-Route::patch('/adverts/{id}/', '\App\Http\Controllers\API\AdvertController@update')->middleware('auth:sanctum');
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::post('/adverts', '\App\Http\Controllers\API\AdvertController@store');
+    Route::get('/adverts/{id}', '\App\Http\Controllers\API\AdvertController@show');
+    Route::delete('/adverts/{id}', '\App\Http\Controllers\API\AdvertController@delete');
+    Route::patch('/adverts/{id}/', '\App\Http\Controllers\API\AdvertController@update');
 
-Route::get('/adverts/{id}', '\App\Http\Controllers\API\AdvertController@show')->middleware('auth:sanctum');
-//Route::get('/adverts/{id}', '\App\Http\Controllers\API\AdvertController@show');
-//Route::delete('adverts/{id}', '\App\Http\Controllers\API\AdvertController@delete')->name('advert.delete');
+});
+

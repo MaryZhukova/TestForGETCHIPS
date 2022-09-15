@@ -28,7 +28,6 @@ class AdvertController extends Controller
     {
         $sort = $request->input('sort');
         $order = $request->input('order');
-
         $list = Advert::orderBy($order, $sort)->paginate(5);
 
         return response()->json([
@@ -45,15 +44,6 @@ class AdvertController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -153,8 +143,26 @@ class AdvertController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        $advert = Advert::findOrFail($id);
+        if($advert)
+            $advert->delete();
+        else
+            return response()->json([
+                "status" => 200,
+                "success" => false,
+                "message" => "Erorr",
+                "data" => []
+            ]);
+
+        return response()->json([
+            "status" => 200,
+            "success" => false,
+            "message" => "Success delete",
+            "data" => []
+        ]);
     }
+
+    
 }
