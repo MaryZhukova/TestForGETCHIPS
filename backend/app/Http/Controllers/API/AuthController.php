@@ -13,26 +13,6 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-
-    public function register ( Request $request ){
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8'
-        ]);
-
-        // Hashing the entered password with default hash
-        $request['password'] = bcrypt($request['password']);
-
-        $user = User::create($request->all());
-
-        $token = $user->createToken('API_TOKEN')->plainTextToken;
-
-        return ['message' => 'Registered!' ,  'token' => $token ];
-    }
-
-
-
     /**
      *
      * @param Request $request
@@ -65,13 +45,4 @@ class AuthController extends Controller
         
     }
 
-
-    /*public function logout(Request $request){
-        auth()->user()->tokens()->delete();
-
-        return \response()->json([
-            'status' => true,
-            'massage' => __('auth.logout'),
-        ], 200);
-    }*/
 }
