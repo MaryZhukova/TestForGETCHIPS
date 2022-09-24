@@ -5,7 +5,7 @@ namespace App\Services;
 
 
 use App\Models\Advert;
-use App\Models\Filestorage;
+use App\Models\File;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use function Symfony\Component\Console\Style\success;
@@ -32,7 +32,7 @@ class AdvertService
             $sort = $sortVariants['0'];
         }
 
-        $list = Advert::all();
+        $list = Advert::with('file')->orderBy($order, $sort)->paginate(10);
 
         return $list;
     }
@@ -57,7 +57,7 @@ class AdvertService
 
         if (!empty($arPhoto)) {
             foreach ($arPhoto as $path) {
-                $advertPhoto = new Filestorage();
+                $advertPhoto = new File();
                 $advertPhoto->photo = $path;
                 $advertPhoto->advert_id = $advert->id;
                 $advertPhoto->save();
@@ -68,7 +68,7 @@ class AdvertService
 
     public function showAdvertByOwner($id)
     {
-        $advert = Advert::with("filestorages")->find($id);
+        $advert = Advert::with("files")->find($id);
         if ($advert) {
             if ($advert->user->id === auth('sanctum')->user()->id) {
                 return [

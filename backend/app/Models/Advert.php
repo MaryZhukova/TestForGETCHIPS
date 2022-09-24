@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Filestorage;
+use App\Models\File;
 
 class Advert extends Model
 {
@@ -25,16 +25,16 @@ class Advert extends Model
         'created_at', 'updated_at'
     ];
 
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
 
-    public function filestorages()
+    public function file()
     {
-        return $this->hasMany(Filestorage::class);
+        return $this->hasMany(File::class);
     }
 
 }

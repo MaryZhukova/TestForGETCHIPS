@@ -9,9 +9,9 @@ use App\Http\Requests\Api\V1\CreateAdvertRequest;
 use App\Http\Requests\Api\V1\UpdateAdvertRequest;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\API\V1\FilestorageController;
+use App\Http\Controllers\API\V1\FileController;
 use App\Models\Advert;
-use App\Models\Filestorage;
+use App\Models\File;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
