@@ -25,7 +25,9 @@ Route::prefix('v1')->group(function () {
         Route::delete('/adverts/{id}', '\App\Http\Controllers\Api\V1\AdvertController@delete');
         Route::patch('/adverts/{id}/', '\App\Http\Controllers\Api\V1\AdvertController@update');
         Route::delete('/adverts/{id}/', '\App\Http\Controllers\Api\V1\AdvertController@delete');
+
         Route::post('/adverts', '\App\Http\Controllers\Api\V1\AdvertController@store');
+
 
 
 

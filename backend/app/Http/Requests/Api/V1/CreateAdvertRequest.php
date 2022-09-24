@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Request;
@@ -8,7 +8,6 @@ use App\Http\Requests\Request;
 
 class CreateAdvertRequest extends FormRequest
 {
-    protected $stopOnFirstFailure = false;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -18,8 +17,6 @@ class CreateAdvertRequest extends FormRequest
     public function authorize()
     {
         $user = $this->user();
-        
-
         return $user != null && $user->tokenCan('create');
     }
 
@@ -39,5 +36,5 @@ class CreateAdvertRequest extends FormRequest
         ];
     }
 
-    
+
 }
