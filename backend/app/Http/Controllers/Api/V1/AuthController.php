@@ -21,9 +21,7 @@ class AuthController extends Controller
     use ApiResponseHelpers;
 
     /**
-     *
      * @param LoginAuthRequest $request
-     * @return Response
      */
     public function login(LoginAuthRequest $request)
     {
@@ -47,7 +45,7 @@ class AuthController extends Controller
     public function register(RegisterAuthRequest $request, UserService $userService)
     {
         $newUser = $userService->createNewUser($request->validated());
-        return response()->json([
+        $this->jsonSuccess([
             'access_token' => $newUser["access_token"],
             'token_type' => 'Bearer',
         ]);
@@ -60,9 +58,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         auth()->user()->tokens()->delete();
-        return [
-            'message' => __('auth.logout'),
-        ];
+        $this->jsonSuccess([]);
     }
 
 
