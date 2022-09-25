@@ -2,10 +2,15 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Helpers\ApiResponseHelpers;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class RegisterAuthRequest extends FormRequest
 {
+    use ApiResponseHelpers;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,6 +34,14 @@ class RegisterAuthRequest extends FormRequest
              'password'  => 'required|string|min:6',
          ];
 
+    }
+
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            $this->jsonErrorValidation($validator->errors())
+        );
     }
 
 

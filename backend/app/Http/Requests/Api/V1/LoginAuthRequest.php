@@ -40,5 +40,5 @@ class LoginAuthRequest extends FormRequest
             $this->jsonErrorValidation($validator->errors())
            );
     }
-    
+
 }

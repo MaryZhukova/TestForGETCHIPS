@@ -28,8 +28,4 @@ class UserService
         ];
     }
 
-
-    public function logoutUser($data){
-
-    }
 }

@@ -15,7 +15,7 @@ class AdvertService
 {
     use ApiResponseHelpers;
 
-    public static function getList($data)
+    public function getList($data)
     {
         $orderVariants = [
             'title',
@@ -41,7 +41,7 @@ class AdvertService
     }
 
 
-    public static function addPhoto($arFiles, $advert_id)
+    public function addPhoto($arFiles, $advert_id)
     {
         foreach ($arFiles as $file) {
             $path = Storage::putFile('images', $file);
@@ -53,7 +53,7 @@ class AdvertService
     }
 
 
-    public static function createAdvert($data)
+    public function createAdvert($data)
     {
         $advert = new Advert();
         $advert->title = $data['title'];
@@ -65,12 +65,13 @@ class AdvertService
         if (isset($data['files'])) {
             self::addPhoto($data['files'], $advert->id);
         }
-        return self::jsonSuccess($advert);
+
+        return $this->jsonSuccess($advert);
     }
 
     public function showAdvertByOwner($id)
     {
-        if (!$advert = Advert::with("files")->find($id)) {
+        if (!$advert = Advert::with("file")->find($id)) {
             return $this->jsonError(__('advert.not_found'));
         }
 
@@ -81,28 +82,28 @@ class AdvertService
     }
 
 
-    public static function updateAdvert($id, $data)
+    public function updateAdvert($id, $data)
     {
         if (!$advert = Advert::find($id)) {
-            return self::jsonError(__('advert.not_found'));
+            return $this->jsonError(__('advert.not_found'));
         }
 
         if ($advert->user->id !== auth('sanctum')->user()->id) {
-            return self::jsonError(__('advert.not_owner'));
+            return $this->jsonError(__('advert.not_owner'));
         }
-        return self::jsonSuccess($advert->update($data));
+        return $this->jsonSuccess($advert->update($data));
     }
 
 
     public function deleteAdvert($id)
     {
         if (!$advert = Advert::find($id)) {
-            return self::jsonError(__('advert.not_found'));
+            return $this->jsonError(__('advert.not_found'));
         }
         if ($advert->user->id !== auth('sanctum')->user()->id) {
-            return self::jsonError(__('advert.not_owner'));
+            return $this->jsonError(__('advert.not_owner'));
         }
-        return self::jsonSucces($advert->delete());
+        return $this->jsonSuccess($advert->delete());
     }
 
 }

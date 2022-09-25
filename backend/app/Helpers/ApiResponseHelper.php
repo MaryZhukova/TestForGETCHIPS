@@ -36,7 +36,7 @@ trait ApiResponseHelpers
     {
         return response()->json([
             'status' => 202,
-            'success' => false,
+            'success' => true,
             'data' => $data
 
         ]);

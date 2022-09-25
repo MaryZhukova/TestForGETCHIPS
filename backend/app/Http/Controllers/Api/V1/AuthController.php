@@ -25,11 +25,11 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
-           $this->jsonErrorAuth(__('auth.failed'));
+            return $this->jsonErrorAuth(__('auth.failed'));
         }
 
         $user = User::where('email', $request->email)->first();
-            $this->jsonSuccess([
+        return $this->jsonSuccess([
                 'token' => $user->createToken("API_TOKEN")->plainTextToken,
                 'token_type' => 'Bearer'
             ]);
@@ -43,7 +43,7 @@ class AuthController extends Controller
     public function register(RegisterAuthRequest $request, UserService $userService)
     {
         $newUser = $userService->createNewUser($request->validated());
-        $this->jsonSuccess([
+        return $this->jsonSuccess([
             'access_token' => $newUser["access_token"],
             'token_type' => 'Bearer',
         ]);
@@ -55,8 +55,10 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+
         auth()->user()->tokens()->delete();
-        $this->jsonSuccess([]);
+        $request->user()->currentAccessToken()->delete();
+        return $this->jsonSuccess([]);
     }
 
 

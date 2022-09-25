@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-
 class AdvertController extends Controller
 {
 
@@ -29,9 +28,9 @@ class AdvertController extends Controller
      * @param GetAdvertsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(GetAdvertsRequest $request)
+    public function index(GetAdvertsRequest $request,  AdvertService $advert)
     {
-        $this->jsonSuccess(AdvertService::getList($request->validated()));
+        return $this->jsonSuccess($advert->getList($request->validated()));
 
     }
 
@@ -40,21 +39,22 @@ class AdvertController extends Controller
      * @param CreateAdvertRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(CreateAdvertRequest $request)
+    public function store(CreateAdvertRequest $request, AdvertService $advert)
     {
-        $this->jsonSuccess(AdvertService::createAdvert($request->validated()));
+
+       return $this->jsonSuccess($advert->createAdvert($request->validated()));
 
     }
 
 
     /**
      * Show owner advert
-     * @param $id
+     * @param $id - advert id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show($id,  AdvertService $advert)
     {
-        $result = AdvertService::showAdvertByOwner();
+        $result = $advert->showAdvertByOwner($id);
         return response()->json($result);
     }
 
@@ -65,14 +65,10 @@ class AdvertController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateAdvertRequest $request, $id)
+    public function update(UpdateAdvertRequest $request, $id, AdvertService $advert)
     {
-        return response()->json([
-            "status" => 200,
-            "success" => false,
-            "message" => __('advert.update'),
-            "data" => AdvertService::updateAdvert($id, $request->validated())
-        ]);
+        return $this->jsonSuccess($advert->updateAdvert($id, $request->validated()));
+
     }
 
 
@@ -81,9 +77,8 @@ class AdvertController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete($id)
+    public function delete($id, AdvertService $service)
     {
-        $result = AdvertService::deleteAdvert($id);
-        return response()->json($result);
+        return response()->json($service->deleteAdvert($id));
     }
 }

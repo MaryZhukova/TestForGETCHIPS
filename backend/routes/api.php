@@ -19,7 +19,6 @@ Route::prefix('v1')->group(function () {
     Route::get('/adverts', '\App\Http\Controllers\Api\V1\AdvertController@index');
 
     Route::group(['middleware' => ['auth:sanctum']], function () {
-
         Route::post('/logout', '\App\Http\Controllers\Api\V1\AuthController@logout');
         Route::get('/adverts/{id}', '\App\Http\Controllers\Api\V1\AdvertController@show');
         Route::delete('/adverts/{id}', '\App\Http\Controllers\Api\V1\AdvertController@delete');

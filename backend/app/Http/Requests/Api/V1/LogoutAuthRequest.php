@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Helpers\ApiResponseHelpers;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class LogoutAuthRequest extends FormRequest
 {
@@ -13,7 +16,7 @@ class LogoutAuthRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,5 +29,11 @@ class LogoutAuthRequest extends FormRequest
         return [
             //
         ];
+    }
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            $this->jsonErrorValidation($validator->errors())
+        );
     }
 }
