@@ -33,7 +33,7 @@
             "Tests\\": "tests/"
         },
         "files":[
-            "app/helpers/ApiResponseHelper.php"
+            "app/Helpers/ApiResponseHelper.php"
         ]
     },
     "scripts": {
