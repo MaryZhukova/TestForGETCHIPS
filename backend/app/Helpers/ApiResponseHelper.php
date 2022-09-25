@@ -42,5 +42,16 @@ trait ApiResponseHelpers
         ]);
     }
 
+    public function jsonErrorValidation($errors)
+    {
+        return response()->json([
+                'status' => 404,
+                'success' => false,
+                'message' => 'Validation errors',
+                'data' => $errors
+            ]
+        );
+    }
+
 
 }

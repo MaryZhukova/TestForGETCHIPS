@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Api\V1;
-
 use App\Helpers\ApiResponseHelpers;
 use App\Http\Requests\Api\V1\LoginAuthRequest;
 use App\Http\Requests\Api\V1\RegisterAuthRequest;
@@ -23,8 +21,8 @@ class AuthController extends Controller
     /**
      * @param LoginAuthRequest $request
      */
-    public function login(LoginAuthRequest $request)
-    {
+    public function login(LoginAuthRequest $request){
+
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
            $this->jsonErrorAuth(__('auth.failed'));

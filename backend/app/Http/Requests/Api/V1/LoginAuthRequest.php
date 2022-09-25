@@ -2,10 +2,14 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Helpers\ApiResponseHelpers;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class LoginAuthRequest extends FormRequest
 {
+    use ApiResponseHelpers;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,9 +27,18 @@ class LoginAuthRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
             'email' => 'required|email',
             'password' => 'required'
         ];
     }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            $this->jsonErrorValidation($validator->errors())
+           );
+    }
+    
 }
