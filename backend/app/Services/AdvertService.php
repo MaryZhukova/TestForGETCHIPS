@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Helpers\ApiResponseHelpers;
 use App\Models\Advert;
 use App\Models\File;
 use Carbon\Carbon;
@@ -12,6 +13,8 @@ use function Symfony\Component\Console\Style\success;
 
 class AdvertService
 {
+    use ApiResponseHelpers;
+
     public static function getList($data)
     {
         $orderVariants = [
@@ -32,9 +35,7 @@ class AdvertService
             $sort = $sortVariants['0'];
         }
 
-        $list = Advert::with('file')->orderBy($order, $sort)->paginate(10);
-
-        return $list;
+        return Advert::with('file')->orderBy($order, $sort)->paginate(10);
     }
 
 
@@ -68,46 +69,34 @@ class AdvertService
 
     public function showAdvertByOwner($id)
     {
-        $advert = Advert::with("files")->find($id);
-        if ($advert) {
-            if ($advert->user->id === auth('sanctum')->user()->id) {
-                return [
-                    'status' => 200,
-                    'success' => true,
-                    'data' => $advert
-                ];
-            } else {
-                return [
-                    "status" => 400,
-                    "success" => false,
-                    "message" => __('advert.not_owner'),
-                ];
-            }
+        if(!$advert = Advert::with("files")->find($id)){
+            return $this->jsonError(__('advert.not_found'));
         }
 
-        return [
-            "status" => 404,
-            "success" => false,
-            "message" => __('advert.not_found'),
+        if ($advert->user->id !== auth('sanctum')->user()->id) {
+           return $this->jsonErrorAuth(__('advert.not_owner'));
+        }
 
-        ];
+        return $this->jsonSuccess($advert);
     }
 
-    public static function updateAdvert($id, $data)
+    public function updateAdvert($id, $data)
     {
-        $advert = Advert::find($id);
-        if ($advert) {
-            if ($advert->user->id === auth('sanctum')->user()->id) {
-                $advert->update($data);
-            }
-            return $advert;
+        if (!$advert = Advert::find($id)) {
+            return $this->jsonError(__('advert.not_found'));
         }
 
+        if ($advert->user->id !== auth('sanctum')->user()->id) {
+            return $this->jsonError(__('advert.not_owner'));
+        }
+
+        return $this->jsonSuccess($advert->update($data));
     }
 
     public static function deleteAdvert($id)
     {
         $advert = Advert::find($id);
+
         if ($advert) {
             if ($advert->user->id === auth('sanctum')->user()->id) {
                 $advert->delete();
@@ -120,7 +109,7 @@ class AdvertService
 
             return [
                 "status" => 200,
-                "success" => false,
+                "success" => true,
                 "message" => __('advert.del_error'),
             ];
         }

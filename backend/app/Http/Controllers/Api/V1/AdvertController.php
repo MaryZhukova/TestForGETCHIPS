@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helpers\ApiResponseHelpers;
 use App\Http\Requests\Api\V1\GetAdvertsRequest;
 use App\Services\AdvertService;
 use Illuminate\Http\Request;
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Validator;
 class AdvertController extends Controller
 {
 
+    use ApiResponseHelpers;
+
     /**
      * Show list with adverts
      * @param GetAdvertsRequest $request
@@ -28,12 +31,8 @@ class AdvertController extends Controller
      */
     public function index(GetAdvertsRequest $request)
     {
-        return response()->json([
-                "success" => true,
-                "status" => 200,
-                "data" => AdvertService::getList($request->validated())
-            ]
-        );
+        $this->jsonSuccess(AdvertService::getList($request->validated()));
+
     }
 
     /**
@@ -43,13 +42,7 @@ class AdvertController extends Controller
      */
     public function store(CreateAdvertRequest $request)
     {
-        return response()->json([
-            "status" => 200,
-            "success" => true,
-            "message" => __('advert.success'),
-            "data" => AdvertService::createAdvert($request->validated())
-        ]);
-
+        $this->jsonSuccess(AdvertService::createAdvert($request->validated()));
 
     }
 
