@@ -35,20 +35,26 @@ class AdvertService
             $sort = $sortVariants['0'];
         }
 
-        return Advert::with('file')->orderBy($order, $sort)->paginate(10);
+        return Advert::with('file')
+            ->orderBy($order, $sort)
+            ->paginate(10);
+    }
+
+
+    public static function addPhoto($arFiles, $advert_id)
+    {
+        foreach ($arFiles as $file) {
+            $path = Storage::putFile('images', $file);
+            $advertPhoto = new File();
+            $advertPhoto->photo = $path;
+            $advertPhoto->advert_id = $advert_id;
+            $advertPhoto->save();
+        }
     }
 
 
     public static function createAdvert($data)
     {
-        $arPhoto = [];
-        if (isset($data['files'])) {
-            foreach ($data['files'] as $file) {
-                $path = Storage::putFile('images', $file);
-                $arPhoto[] = $path;
-            }
-        }
-
         $advert = new Advert();
         $advert->title = $data['title'];
         $advert->description = $data['description'];
@@ -56,63 +62,47 @@ class AdvertService
         $advert->public_date = Carbon::now();
         $advert->save();
 
-        if (!empty($arPhoto)) {
-            foreach ($arPhoto as $path) {
-                $advertPhoto = new File();
-                $advertPhoto->photo = $path;
-                $advertPhoto->advert_id = $advert->id;
-                $advertPhoto->save();
-            }
+        if (isset($data['files'])) {
+            self::addPhoto($data['files'], $advert->id);
         }
-
+        return self::jsonSuccess($advert);
     }
 
     public function showAdvertByOwner($id)
     {
-        if(!$advert = Advert::with("files")->find($id)){
+        if (!$advert = Advert::with("files")->find($id)) {
             return $this->jsonError(__('advert.not_found'));
         }
 
         if ($advert->user->id !== auth('sanctum')->user()->id) {
-           return $this->jsonErrorAuth(__('advert.not_owner'));
+            return $this->jsonErrorAuth(__('advert.not_owner'));
         }
-
         return $this->jsonSuccess($advert);
     }
 
-    public function updateAdvert($id, $data)
+
+    public static function updateAdvert($id, $data)
     {
         if (!$advert = Advert::find($id)) {
-            return $this->jsonError(__('advert.not_found'));
+            return self::jsonError(__('advert.not_found'));
         }
 
         if ($advert->user->id !== auth('sanctum')->user()->id) {
-            return $this->jsonError(__('advert.not_owner'));
+            return self::jsonError(__('advert.not_owner'));
         }
-
-        return $this->jsonSuccess($advert->update($data));
+        return self::jsonSuccess($advert->update($data));
     }
 
-    public static function deleteAdvert($id)
+
+    public function deleteAdvert($id)
     {
-        $advert = Advert::find($id);
-
-        if ($advert) {
-            if ($advert->user->id === auth('sanctum')->user()->id) {
-                $advert->delete();
-                return [
-                    "status" => 200,
-                    "success" => false,
-                    "message" => __('advert.delete'),
-                ];
-            }
-
-            return [
-                "status" => 200,
-                "success" => true,
-                "message" => __('advert.del_error'),
-            ];
+        if (!$advert = Advert::find($id)) {
+            return self::jsonError(__('advert.not_found'));
         }
+        if ($advert->user->id !== auth('sanctum')->user()->id) {
+            return self::jsonError(__('advert.not_owner'));
+        }
+        return self::jsonSucces($advert->delete());
     }
 
 }

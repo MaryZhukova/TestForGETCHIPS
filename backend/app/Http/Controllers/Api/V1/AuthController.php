@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helpers\ApiResponseHelpers;
 use App\Http\Requests\Api\V1\LoginAuthRequest;
 use App\Http\Requests\Api\V1\RegisterAuthRequest;
 use App\Models\User;
@@ -17,6 +18,7 @@ use App\Services\UserService;
 
 class AuthController extends Controller
 {
+    use ApiResponseHelpers;
 
     /**
      *
@@ -27,21 +29,14 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
-            return \response()->json([
-                'success' => false,
-                'status' => 401,
-                'message' => __('auth.failed')
-            ]);
+           $this->jsonErrorAuth(__('auth.failed'));
         }
 
         $user = User::where('email', $request->email)->first();
-        return \response()->json([
-            'status' => true,
-            'massage' => __('auth.login'),
-            'token' => $user->createToken("API_TOKEN")->plainTextToken,
-            'token_type' => 'Bearer'
-        ], 200);
-
+            $this->jsonSuccess([
+                'token' => $user->createToken("API_TOKEN")->plainTextToken,
+                'token_type' => 'Bearer'
+            ]);
     }
 
 
