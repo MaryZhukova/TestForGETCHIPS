@@ -9,6 +9,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class LogoutAuthRequest extends FormRequest
 {
+    use ApiResponseHelpers;
     /**
      * Determine if the user is authorized to make this request.
      *

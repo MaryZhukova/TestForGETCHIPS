@@ -91,7 +91,10 @@ class AdvertService
         if ($advert->user->id !== auth('sanctum')->user()->id) {
             return $this->jsonError(__('advert.not_owner'));
         }
-        return $this->jsonSuccess($advert->update($data));
+        $advert->update($data);
+
+
+        return $this->jsonSuccess([Advert::find($id)]);
     }
 
 

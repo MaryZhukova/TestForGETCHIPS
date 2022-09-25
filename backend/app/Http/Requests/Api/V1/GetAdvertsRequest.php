@@ -29,4 +29,5 @@ class GetAdvertsRequest extends FormRequest
         ];
 
     }
+
 }

@@ -14,12 +14,14 @@ trait ApiResponseHelpers
 
     public function jsonError($message)
     {
-        return response()->json([
+        return \response()->json([
                 'status' => 404,
                 'success' => false,
                 'message' => $message
             ]
         );
+
+
     }
 
     public function jsonErrorAuth($message)
@@ -35,9 +37,9 @@ trait ApiResponseHelpers
     public function jsonSuccess($data)
     {
         return response()->json([
-            'status' => 202,
+            'status' => 200,
             'success' => true,
-            'data' => $data
+            'data' => $data ?? ""
 
         ]);
     }

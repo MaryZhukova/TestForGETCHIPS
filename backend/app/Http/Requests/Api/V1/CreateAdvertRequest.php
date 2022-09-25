@@ -2,13 +2,18 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Helpers\ApiResponseHelpers;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Request;
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 
 class CreateAdvertRequest extends FormRequest
 {
 
+    use ApiResponseHelpers;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -35,6 +40,15 @@ class CreateAdvertRequest extends FormRequest
             //'public_date'   => 'required|date',
         ];
     }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            $this->jsonErrorValidation($validator->errors())
+        );
+    }
+
+
 
 
 }

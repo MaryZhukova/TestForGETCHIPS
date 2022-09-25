@@ -28,9 +28,9 @@ class AdvertController extends Controller
      * @param GetAdvertsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(GetAdvertsRequest $request,  AdvertService $advert)
+    public function index(GetAdvertsRequest $request, AdvertService $advert)
     {
-        return $this->jsonSuccess($advert->getList($request->validated()));
+        return $advert->getList($request->validated());
 
     }
 
@@ -42,7 +42,7 @@ class AdvertController extends Controller
     public function store(CreateAdvertRequest $request, AdvertService $advert)
     {
 
-       return $this->jsonSuccess($advert->createAdvert($request->validated()));
+        return $advert->createAdvert($request->validated());
 
     }
 
@@ -52,10 +52,9 @@ class AdvertController extends Controller
      * @param $id - advert id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id,  AdvertService $advert)
+    public function show($id, AdvertService $advert)
     {
-        $result = $advert->showAdvertByOwner($id);
-        return response()->json($result);
+        return $advert->showAdvertByOwner($id);
     }
 
 
@@ -65,9 +64,10 @@ class AdvertController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateAdvertRequest $request, $id, AdvertService $advert)
+    public function update(UpdateAdvertRequest $request, $id, AdvertService $advertService)
     {
-        return $this->jsonSuccess($advert->updateAdvert($id, $request->validated()));
+
+        return $advertService->updateAdvert($id, $request->validated());
 
     }
 
@@ -79,6 +79,6 @@ class AdvertController extends Controller
      */
     public function delete($id, AdvertService $service)
     {
-        return response()->json($service->deleteAdvert($id));
+        return $service->deleteAdvert($id);
     }
 }
